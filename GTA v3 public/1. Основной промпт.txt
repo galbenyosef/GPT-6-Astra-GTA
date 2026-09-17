@@ -1,0 +1,307 @@
+# Prompt — Mini Open World
+
+You are an autonomous senior game engineer. Build a **small but complete real-time 3D open-world browser game** that demonstrates multiple interacting gameplay systems working together.
+
+The goal is **not** to make a GTA clone. The goal is to create a compact, polished sandbox where walking, driving, NPC behavior, missions, collisions, and police pursuit all work reliably in the same simulation.
+
+## Primary Objective
+
+Create a playable mini city where the player can:
+
+- walk around on foot;
+- enter and exit cars;
+- drive cars with controls and physics that feel clearly different from walking;
+- encounter pedestrian NPCs and traffic NPCs;
+- complete one simple mission;
+- trigger a police pursuit;
+- collide with buildings, vehicles, and other world objects.
+
+The final result must feel like a coherent game, not a collection of disconnected demos.
+
+## Technical Requirements
+
+Build the project as a browser application using:
+
+- **TypeScript**
+- **React**
+- **Vite**
+- **Three.js** or **React Three Fiber** for real-time 3D rendering
+
+The game must be **true real-time 3D**. Do not implement it as a 2D top-down game, pseudo-3D scene, isometric renderer, CSS trick, or pre-rendered animation.
+
+Use a perspective camera, real 3D geometry, depth, lighting, shadows where practical, and 3D transforms for characters, cars, buildings, and world objects.
+
+Avoid a backend. The project must run locally with a normal:
+
+```bash
+npm install
+npm run dev
+```
+
+You may use small utility libraries if absolutely necessary, but prefer implementing the important gameplay systems yourself. Do not depend on external game assets that require downloads, API keys, authentication, or paid services.
+
+Use procedural/simple 3D geometry and generated in-code materials so the project is self-contained.
+
+Do not rely on external 3D asset downloads. Primitive meshes and lightweight procedural models are acceptable as long as the world is clearly three-dimensional.
+
+## World
+
+Create a compact **fully 3D city environment** with:
+
+- multiple roads;
+- intersections;
+- sidewalks;
+- buildings;
+- obstacles;
+- parked cars;
+- moving traffic;
+- pedestrians;
+- at least one recognizable mission location.
+
+Use a **third-person perspective camera** that smoothly follows the controlled player or vehicle.
+
+The camera must clearly show depth and perspective. It may orbit or adjust based on movement, but it must never become a fixed 2D top-down camera.
+
+The world must be larger than the viewport so the user has to move around to explore it.
+
+## Player On Foot
+
+The player must:
+
+- move in four or more directions;
+- collide with buildings and solid obstacles;
+- have a visible facing direction or movement orientation;
+- be unable to walk through solid cars or walls;
+- be able to approach an available vehicle and enter it with an interaction key.
+
+Show a small on-screen hint when entering a vehicle is possible.
+
+## Vehicle System
+
+The player must be able to:
+
+- enter a car;
+- take control of it;
+- accelerate;
+- brake/reverse;
+- steer;
+- exit the car when stopped or moving slowly enough.
+
+Driving must feel mechanically different from walking.
+
+Implement at least simple vehicle behavior with:
+
+- acceleration;
+- velocity;
+- drag/friction;
+- steering;
+- turning influenced by speed;
+- collision response.
+
+The player should not instantly rotate a car like a character.
+
+When the player exits, the character should appear next to the car in a valid non-colliding position.
+
+## NPC Pedestrians
+
+Add multiple pedestrians that:
+
+- move around the city;
+- choose destinations or follow simple waypoint routes;
+- do not remain permanently static;
+- react reasonably when blocked;
+- do not all move in perfect synchronization.
+
+A simple state machine is enough.
+
+Examples:
+
+- walking;
+- waiting;
+- changing destination;
+- fleeing from danger.
+
+## Traffic NPCs
+
+Add moving NPC vehicles that:
+
+- follow roads or waypoint paths;
+- move through the city continuously;
+- slow down or redirect when necessary;
+- collide or respond when blocked instead of passing through everything.
+
+They do not need advanced traffic AI, but they must visibly behave like independent vehicles.
+
+## Collision Detection
+
+Collision detection is mandatory.
+
+Handle meaningful collisions between:
+
+- player and buildings;
+- player and cars;
+- player car and buildings;
+- player car and NPC cars;
+- NPC cars and major obstacles.
+
+The game must not allow the player to simply pass through the environment.
+
+Use appropriate **3D collision volumes** such as boxes, capsules, spheres, oriented boxes, or a lightweight physics engine.
+
+Collision must correspond to the 3D world geometry rather than only screen-space overlap.
+
+## Police / Pursuit System
+
+Implement a simple wanted/police system.
+
+The player should be able to trigger police attention by doing something such as:
+
+- hitting an NPC;
+- crashing into a police vehicle;
+- damaging multiple vehicles;
+- entering a designated restricted area.
+
+When wanted:
+
+- show a visible wanted indicator;
+- spawn or activate at least one police vehicle;
+- police should pursue the player;
+- police should update its target as the player moves;
+- pursuit must work both while the player is on foot and while driving.
+
+The wanted state should eventually end if the player escapes for a sufficient amount of time.
+
+## Mission
+
+Implement exactly one small but complete mission.
+
+Example structure:
+
+1. Go to a highlighted location.
+2. Enter a marked car.
+3. Drive to a destination.
+4. Reach the destination without being stopped.
+5. Display success.
+
+The mission must include:
+
+- a clear start condition;
+- current objective text;
+- a destination marker;
+- success state;
+- ability to restart or replay.
+
+Do not make the mission purely textual. The player must physically move through the game world to complete it.
+
+## UI / HUD
+
+Include a compact HUD showing at least:
+
+- player state: `ON FOOT` or `DRIVING`;
+- current speed while driving;
+- current mission objective;
+- wanted/police status;
+- controls/help.
+
+Avoid covering too much of the gameplay area.
+
+## Controls
+
+Use intuitive keyboard controls, for example:
+
+- `WASD` or arrow keys — movement / driving;
+- `E` — enter or exit vehicle;
+- `R` — restart mission;
+- optional `Space` — brake/handbrake.
+
+Show the actual controls in the UI.
+
+## Visual Quality
+
+The application should be visually readable and polished enough that a screen recording immediately communicates what is happening.
+
+The presentation must unmistakably look like a real-time **3D game**, with perspective, depth, 3D models, lighting, and camera motion.
+
+Use:
+
+- distinct road/sidewalk/building colors;
+- clear player and NPC markers;
+- visual car orientation;
+- mission markers;
+- police visual identity;
+- simple shadows, outlines, or effects where useful.
+
+Do not spend most of the effort on decorative menus. Prioritize gameplay clarity.
+
+## Architecture
+
+Structure the code cleanly.
+
+Separate major systems where practical, for example:
+
+- game loop;
+- input;
+- entities;
+- player;
+- vehicles;
+- NPC AI;
+- police AI;
+- missions;
+- collisions;
+- rendering;
+- world/map data.
+
+Avoid putting the entire game in one giant component.
+
+Keep simulation state separate from React UI state where appropriate.
+
+## Reliability Requirements
+
+The game must:
+
+- start without runtime errors;
+- remain playable after entering/exiting vehicles repeatedly;
+- not lose keyboard input after UI interactions;
+- not let the controlled entity teleport unexpectedly;
+- not produce NaN positions or velocities;
+- keep NPCs active over time;
+- keep collision handling stable;
+- allow mission completion from a fresh run.
+
+## Acceptance Criteria
+
+The result is only complete if all of the following can be demonstrated in one continuous play session:
+
+1. The player walks around a city larger than the screen.
+2. The player collides with buildings instead of passing through them.
+3. The player approaches a car and enters it.
+4. Driving has acceleration, steering, inertia, and visibly different handling from walking.
+5. The player exits the car and continues on foot.
+6. Multiple pedestrians move independently.
+7. Multiple NPC cars move around the road network.
+8. Vehicle/environment collisions visibly affect movement.
+9. A complete mission can be started and finished.
+10. A wanted state can be triggered.
+11. Police actively pursue the player.
+12. The game remains functional after all of the above occur.
+
+## Delivery Requirements
+
+Implement the full project.
+
+Do **not**:
+
+- provide pseudocode instead of implementation;
+- leave TODO placeholders for required systems;
+- replace gameplay with static mockups;
+- fake movement with CSS-only animations;
+- omit files that are necessary to run the app.
+
+At the end, provide:
+
+1. a short summary of the implemented systems;
+2. the final file structure;
+3. exact commands to install and run the project;
+4. any important controls or implementation notes.
+
+Before finishing, review the code for obvious TypeScript errors, broken imports, invalid state transitions, and missing required features.
